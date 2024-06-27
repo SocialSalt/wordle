@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	wordle "github.com/socialsalt/wordle/src"
 	"strconv"
 	"strings"
-	wordle "wordle/src"
 )
 
 func main() {

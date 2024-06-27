@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	wordle "github.com/socialsalt/wordle/src"
 	"math/rand"
-	"wordle/src"
 )
 
 func main() {
@@ -12,7 +12,7 @@ func main() {
 		panic(err)
 	}
 	index := rand.Intn(len(words))
-	targetWord := words[index]
+	targetWord := string(words[index])
 	fmt.Printf("You found the target world %s\n", targetWord)
 	wordle.PlayWordle(targetWord)
 	fmt.Printf("You found the target world %s\n", targetWord)
