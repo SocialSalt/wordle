@@ -35,6 +35,22 @@ func LoadWords(filename string) ([][]rune, error) {
 	return words, scanner.Err()
 }
 
+func LoadWordsString(filename string) ([]string, error) {
+	fp, err := folder.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer fp.Close()
+
+	var words []string
+	scanner := bufio.NewScanner(fp)
+
+	for scanner.Scan() {
+		words = append(words, scanner.Text())
+	}
+	return words, scanner.Err()
+}
+
 func removeWordsWithChar(words [][]rune, char rune) [][]rune {
 	test := func(s []rune) bool { return !slices.Contains(s, char) }
 	return filter(words, test)
