@@ -2,8 +2,11 @@ package wordle
 
 import (
 	"bufio"
-	"os"
+	"embed"
 )
+
+//go:embed words/*.txt
+var folder embed.FS
 
 func filter[T any](array []T, testFunc func(T) bool) []T {
 	var ret []T
@@ -25,7 +28,7 @@ func listContains[T comparable](list []T, target T) bool {
 }
 
 func LoadWords(filename string) ([][]rune, error) {
-	fp, err := os.Open(filename)
+	fp, err := folder.Open(filename)
 	if err != nil {
 		return nil, err
 	}

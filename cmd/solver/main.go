@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	wordle "github.com/socialsalt/wordle/src"
+	wordle "github.com/socialsalt/wordle/internal"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	words, err := wordle.LoadWords("data/official_wordle_common.txt")
+	words, err := wordle.LoadWords("official_wordle_common.txt")
 	if err != nil {
 		panic("failed to load words")
 	}
