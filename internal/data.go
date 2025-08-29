@@ -2,8 +2,12 @@ package wordle
 
 import (
 	"bufio"
-	"os"
+	"embed"
+	"slices"
 )
+
+//go:embed words/*.txt
+var folder embed.FS
 
 func filter[T any](array []T, testFunc func(T) bool) []T {
 	var ret []T
@@ -15,17 +19,8 @@ func filter[T any](array []T, testFunc func(T) bool) []T {
 	return ret
 }
 
-func listContains[T comparable](list []T, target T) bool {
-	for _, item := range list {
-		if item == target {
-			return true
-		}
-	}
-	return false
-}
-
 func LoadWords(filename string) ([][]rune, error) {
-	fp, err := os.Open(filename)
+	fp, err := folder.Open(filename)
 	if err != nil {
 		return nil, err
 	}
@@ -40,8 +35,24 @@ func LoadWords(filename string) ([][]rune, error) {
 	return words, scanner.Err()
 }
 
+func LoadWordsString(filename string) ([]string, error) {
+	fp, err := folder.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer fp.Close()
+
+	var words []string
+	scanner := bufio.NewScanner(fp)
+
+	for scanner.Scan() {
+		words = append(words, scanner.Text())
+	}
+	return words, scanner.Err()
+}
+
 func removeWordsWithChar(words [][]rune, char rune) [][]rune {
-	test := func(s []rune) bool { return !listContains(s, char) }
+	test := func(s []rune) bool { return !slices.Contains(s, char) }
 	return filter(words, test)
 }
 
@@ -51,7 +62,7 @@ func removeWordsWithPlacedChar(words [][]rune, char rune, index int) [][]rune {
 }
 
 func removeWordsWithoutChar(words [][]rune, char rune) [][]rune {
-	test := func(s []rune) bool { return listContains(s, char) }
+	test := func(s []rune) bool { return slices.Contains(s, char) }
 	return filter(words, test)
 }
 

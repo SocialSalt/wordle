@@ -3,6 +3,8 @@ package wordle
 import (
 	"errors"
 	"fmt"
+	"slices"
+	"strings"
 )
 
 const TARGET_WORD_NULL_RUNE = '0'
@@ -30,28 +32,28 @@ func findFirst[T comparable](list []T, item T) int {
 	return -1
 }
 
-func checkWord(targetWord []rune, guess []rune) []int {
-	res := make([]int, 5)
+func checkWord(targetWord []rune, guess []rune) []string {
+	res := make([]string, 5)
 	for i := range res {
-		res[i] = 0
+		res[i] = "🟥"
 	}
 	for i, letter := range guess {
 		if targetWord[i] == letter {
 			targetWord[i] = TARGET_WORD_NULL_RUNE
 			guess[i] = GUESS_WORD_NULL_RUNE
-			res[i] = 2
+			res[i] = "🟩"
 		}
 	}
 	for i, letter := range guess {
 		if index := findFirst(targetWord, letter); index != -1 {
 			targetWord[index] = TARGET_WORD_NULL_RUNE
-			res[i] = 1
+			res[i] = "🟨"
 		}
 	}
 	return res
 }
 
-func PlayWordle(targetWord string) {
+func PlayWordle(targetWord string, allowedWords []string) {
 	gameOver := false
 	for !gameOver {
 		var guess string
@@ -62,11 +64,15 @@ func PlayWordle(targetWord string) {
 			fmt.Println(len(guess))
 			continue
 		}
+		if !slices.Contains(allowedWords, guess) {
+			fmt.Printf("%s not found in dictionary\n", guess)
+			continue
+		}
 		result := checkWord([]rune(targetWord), []rune(guess))
-		fmt.Println(result)
+		fmt.Println(strings.Join(result, ""))
 		gameOver = true
 		for _, res := range result {
-			if res != 2 {
+			if res != "🟩" {
 				gameOver = false
 			}
 		}
