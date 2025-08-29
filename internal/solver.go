@@ -104,12 +104,17 @@ func findCollectionEntropy(words [][]rune) float64 {
 }
 
 func FindBestWord(words [][]rune) ([]rune, float64) {
-	num_responses := int(math.Pow(3, 5))
+	// the number of ways the game could respond to us
+	// TODO: this is the upper bound on the  number of ways
+	// the game could respond, so we're doing more work
+	// than we need to ususally
+	// we could for example eliminate but letters we've locked in
+	numResponses := int(math.Pow(3, 5))
 	var bestWord []rune
 	var bestEntropy float64 = math.MaxFloat64
 	for _, word := range words {
 		var entropy float64
-		for i := 0; i < num_responses-1; i++ {
+		for i := 0; i < numResponses-1; i++ {
 			response := DecToTer(i)
 			newWords := FilterWords(words, word, response)
 			entropy += findCollectionEntropy(newWords)
