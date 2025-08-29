@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	words, err := wordle.LoadWords("official_wordle_common.txt")
+	words, err := wordle.LoadWords("words/official_wordle_common.txt")
 	if err != nil {
 		panic("failed to load words")
 	}

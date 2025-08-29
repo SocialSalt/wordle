@@ -3,6 +3,7 @@ package wordle
 import (
 	"bufio"
 	"embed"
+	"slices"
 )
 
 //go:embed words/*.txt
@@ -16,15 +17,6 @@ func filter[T any](array []T, testFunc func(T) bool) []T {
 		}
 	}
 	return ret
-}
-
-func listContains[T comparable](list []T, target T) bool {
-	for _, item := range list {
-		if item == target {
-			return true
-		}
-	}
-	return false
 }
 
 func LoadWords(filename string) ([][]rune, error) {
@@ -44,7 +36,7 @@ func LoadWords(filename string) ([][]rune, error) {
 }
 
 func removeWordsWithChar(words [][]rune, char rune) [][]rune {
-	test := func(s []rune) bool { return !listContains(s, char) }
+	test := func(s []rune) bool { return !slices.Contains(s, char) }
 	return filter(words, test)
 }
 
@@ -54,7 +46,7 @@ func removeWordsWithPlacedChar(words [][]rune, char rune, index int) [][]rune {
 }
 
 func removeWordsWithoutChar(words [][]rune, char rune) [][]rune {
-	test := func(s []rune) bool { return listContains(s, char) }
+	test := func(s []rune) bool { return slices.Contains(s, char) }
 	return filter(words, test)
 }
 
